@@ -14,14 +14,17 @@ main_dynamic: libdynamic.so
 main_static: libstatic.a
 	go build main_static.go
 
-inspect: main_dynamic main_static
-	ldd main_dynamic main_static
+main_dlopen: libdynamic.so
+	go build main_dlopen.go
+
+inspect: main_dynamic main_static main_dlopen
+	ldd main_dynamic main_dlopen main_static
 
 run: main_dynamic main_static
 	LD_LIBRARY_PATH=. ./main_dynamic
+	./main_dlopen
 	./main_static
 
 clean:
 	rm -rf *.o *.a *.so
-	rm -f main_dynamic
-	rm -f main_static
+	rm -f main_dynamic main_dlopen main_static
